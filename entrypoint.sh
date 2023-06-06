@@ -35,7 +35,7 @@ if test -f "$FILE_S_CREATE"; then
             DOWNLOAD_URL="${temp#\"}"
             # download file
             echo "Downloading : $DOWNLOAD_URL"
-            wget -O /action_work_folder/report.pdf ${DOWNLOAD_URL}
+            wget -O /action_work_folder/result/report.pdf ${DOWNLOAD_URL}
         fi   
     fi
 fi
