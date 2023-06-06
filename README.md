@@ -1,2 +1,3 @@
-# blue-action
-blue github action
+# blue github action
+
+Scan gamepad manage scripts
