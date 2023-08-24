@@ -11,6 +11,9 @@ if [[ -z "${TM_API_URL}" ]]; then
   echo "Error: missing TM_API_URL env variable"
   exit 1
 fi
+export TM_API_URL="${TM_API_URL}"
+echo "ponidooo"
+echo $TM_API_URL
 
 
 # overview of process: create a snapshot with the input source, analyze it, then download the result as a pdf report
