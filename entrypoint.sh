@@ -7,30 +7,21 @@ if [[ -z "${TM_TOKEN_KEY}" ]]; then
   exit 1
 fi
 
-if [[ -z "${TM_API_URL}" ]]; then
-  echo "Error: missing TM_API_URL env variable"
-  exit 1
-fi
-export TM_API_URL="${TM_API_URL}"
-echo "ponidooo"
-echo $TM_API_URL
-
-
 # overview of process: create a snapshot with the input source, analyze it, then download the result as a pdf report
 
 echo "Create a snapshot"
-COMMAND_OUTPUT=$(npx @testmachine.ai/cli -t ${TM_TOKEN_KEY} snapshot create --repo-id ${1} --file ${2} --output=json)
+COMMAND_OUTPUT=$(npx bluemachinecli -t ${TM_TOKEN_KEY} snapshot create --repo-id ${1} --file ${2} --output=json)
 
 # attempt parse json output from previous command, show error in console if failed to parse
 SNAPSHOT_ID=$(jq '.ID' <<< "$COMMAND_OUTPUT") || echo "Cannot parse output from command because: $COMMAND_OUTPUT"
 if [[ ! -z $SNAPSHOT_ID && $SNAPSHOT_ID != "null" ]]; then
     echo "Created Snapshot Id for analysis: $SNAPSHOT_ID"
-    COMMAND_OUTPUT=$(npx @testmachine.ai/cli -t ${TM_TOKEN_KEY} snapshot analyze --tools cbt --snapshot-id=${SNAPSHOT_ID} --output=json)
+    COMMAND_OUTPUT=$(npx bluemachinecli -t ${TM_TOKEN_KEY} snapshot analyze --tools cbt --snapshot-id=${SNAPSHOT_ID} --output=json)
     # attempt parse json output from previous command, show error in console if failed to parse
     ANA_ID=$(jq '.id' <<< "$COMMAND_OUTPUT")
     if [[ ! -z $ANA_ID && $ANA_ID != "null" ]]; then
         echo "Requesting report for generated Analysis Id: $ANA_ID"
-        COMMAND_OUTPUT=$(npx @testmachine.ai/cli -t ${TM_TOKEN_KEY} analyses report --analysis-id=${ANA_ID} --output=json)
+        COMMAND_OUTPUT=$(npx bluemachinecli -t ${TM_TOKEN_KEY} analyses report --analysis-id=${ANA_ID} --output=json)
         # attempt parse json output from previous command, show error in console if failed to parse
         DOWNLOAD_URL=$(jq '.downloadURLOfGeneratedReport' <<< "$COMMAND_OUTPUT")
         if [[ ! -z $DOWNLOAD_URL && $DOWNLOAD_URL != "null" ]]; then
